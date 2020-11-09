@@ -15,9 +15,9 @@
 
     <distributionManagement>
         <repository>
-            <id>github</id>
-            <name>GitHub HP888 Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/HP888/messaging-system</url>
+            <id>safemc-repository</id>
+            <name>SafeMC Repository</name>
+            <url>https://safemc.pl/repository/releases</url>
         </repository>
     </distributionManagement>
 
