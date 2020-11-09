@@ -11,6 +11,29 @@ java -Dhost=0.0.0.0 -Dport=9999 -jar messaging-server-1.0-SNAPSHOT.jar
 
 # Using client as API
 
+Add this code to your maven dependencies.
+
+```xml
+
+    <repositories>
+        <repository>
+            <id>safemc-repository</id>
+            <name>SafeMC Repository</name>
+            <url>https://safemc.pl/repository/releases</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>me.hp888</groupId>
+            <artifactId>messaging-client</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+```
+
+
 **Example packet**
 
 ```java
