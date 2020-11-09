@@ -13,6 +13,14 @@
         <module>messaging-client</module>
     </modules>
 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub HP888 Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/HP888/messaging-system</url>
+        </repository>
+    </distributionManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
