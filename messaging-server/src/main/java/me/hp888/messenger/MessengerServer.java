@@ -61,7 +61,7 @@ public final class MessengerServer {
             try {
                 socket = serverSocket.accept();
             } catch (IOException ex) {
-                if (!ex.getMessage().equals("Accept timed out")) {
+                if (ex.getMessage().equals("Accept timed out")) {
                     continue;
                 }
 

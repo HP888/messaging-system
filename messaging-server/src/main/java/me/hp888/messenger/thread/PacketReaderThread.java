@@ -3,7 +3,8 @@ package me.hp888.messenger.thread;
 import me.hp888.messenger.MessengerServer;
 import me.hp888.messenger.client.Client;
 import java.io.DataInputStream;
-import java.io.IOException;
+import java.io.EOFException;
+import java.util.Objects;
 import java.util.logging.Level;
 
 /**
@@ -32,8 +33,8 @@ public final class PacketReaderThread extends Thread {
 
                 client.getOutgoingPackets().add(bytes);
             }
-        } catch (IOException ex) {
-            if (!ex.getMessage().equals("Connection reset")) {
+        } catch (Exception ex) {
+            if (!(ex instanceof EOFException) && (Objects.isNull(ex.getMessage()) || !ex.getMessage().equals("Connection reset"))) {
                 server.getLogger().log(Level.SEVERE, "Cannot read packet!", ex);
             }
 

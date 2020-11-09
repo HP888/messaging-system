@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -17,12 +18,14 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public final class Client {
 
     private final Socket socket;
+    private final InetAddress address;
 
     private final DataInputStream inputStream;
     private final DataOutputStream outputStream;
 
     public Client(Socket socket) throws IOException {
         this.socket = socket;
+        this.address = socket.getInetAddress();
         this.inputStream = new DataInputStream(socket.getInputStream());
         this.outputStream = new DataOutputStream(socket.getOutputStream());
     }

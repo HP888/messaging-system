@@ -1,0 +1,4 @@
+main: 'me.hp888.messenger.bukkit.BukkitMessengerPlugin'
+version: '1.0'
+author: 'HP888'
+name: 'MessengerPlugin'
