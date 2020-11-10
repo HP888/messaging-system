@@ -21,7 +21,6 @@ Add this code to your maven dependencies.
     <repositories>
         <repository>
             <id>safemc-repository</id>
-            <name>SafeMC Repository</name>
             <url>https://safemc.pl/repository/releases</url>
         </repository>
     </repositories>
