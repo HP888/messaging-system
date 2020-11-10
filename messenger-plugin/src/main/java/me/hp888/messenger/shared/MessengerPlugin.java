@@ -1,31 +1,64 @@
 package me.hp888.messenger.shared;
 
+import lombok.RequiredArgsConstructor;
 import me.hp888.messenger.api.callback.Callback;
+import me.hp888.messenger.api.client.Client;
 import me.hp888.messenger.api.packet.Packet;
 import me.hp888.messenger.api.packet.PacketHandler;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author hp888 on 09.11.2020.
  */
 
-public interface MessengerPlugin {
+@RequiredArgsConstructor
+public final class MessengerPlugin {
+
+    private final Client client;
+    private final Logger logger;
 
     /* packet sending */
 
-    void sendPacket(Packet packet);
+    public void sendPacket(Packet packet) {
+        try {
+            client.sendPacket(packet);
+        } catch (IOException ex) {
+            logger.log(Level.SEVERE, "Cannot send packet \"" + packet.getClass().getSimpleName() + "\"!", ex);
+        }
+    }
 
-    void sendPacket(Packet packet, Callback<?> callback);
+    public void sendPacket(Packet packet, Callback<?> callback) {
+        try {
+            client.sendPacket(packet, callback);
+        } catch (IOException ex) {
+            logger.log(Level.SEVERE, "Cannot send packet \"" + packet.getClass().getSimpleName() + "\"!", ex);
+        }
+    }
 
     /* packet registering */
 
-    void unsubscribePackets();
+    public void unsubscribePackets() {
+        client.unsubscribePackets();
+    }
 
-    void subscribePackets(String... classNames);
+    public void subscribePackets(String... classNames) {
+        client.subscribePackets(classNames);
+    }
 
     /* packet handlers */
 
-    void addPacketHandler(PacketHandler handler);
+    public void addPacketHandler(PacketHandler handler) {
+        client.addPacketHandler(handler);
+    }
 
-    void removePacketHandler(Class<? extends PacketHandler> handlerClass);
+    public void removePacketHandler(Class<? extends PacketHandler> handlerClass) {
+        client.removePacketHandler(handlerClass);
+    }
+
+    public void disconnect() throws IOException {
+        client.disconnect();
+    }
 
 }

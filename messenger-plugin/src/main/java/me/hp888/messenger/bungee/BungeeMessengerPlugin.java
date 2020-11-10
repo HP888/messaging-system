@@ -1,10 +1,7 @@
 package me.hp888.messenger.bungee;
 
 import me.hp888.messenger.MessengerClient;
-import me.hp888.messenger.api.callback.Callback;
 import me.hp888.messenger.api.client.Client;
-import me.hp888.messenger.api.packet.Packet;
-import me.hp888.messenger.api.packet.PacketHandler;
 import me.hp888.messenger.shared.Messenger;
 import me.hp888.messenger.shared.MessengerPlugin;
 import me.hp888.messenger.shared.config.Configuration;
@@ -19,11 +16,9 @@ import java.util.logging.Level;
  * @author hp888 on 09.11.2020.
  */
 
-public final class BungeeMessengerPlugin extends Plugin implements MessengerPlugin {
+public final class BungeeMessengerPlugin extends Plugin {
 
     private final Configuration configuration = new Configuration();
-
-    private Client messengerClient;
 
     @Override
     public void onEnable() {
@@ -35,66 +30,38 @@ public final class BungeeMessengerPlugin extends Plugin implements MessengerPlug
             return;
         }
 
-        Messenger.setInstance(this);
 
-        messengerClient = new MessengerClient();
+        final Configuration.Pool pool = configuration.getPool();
+        final Client client;
+
+        if (pool.isAdjustSizeAutomatically()) {
+            client = new MessengerClient();
+        } else {
+            client = new MessengerClient(Math.max(2, pool.getSize()));
+        }
 
         try {
-            messengerClient.connect(new InetSocketAddress(configuration.getHost(), configuration.getPort()));
+            client.connect(new InetSocketAddress(configuration.getHost(), configuration.getPort()));
         } catch (IOException ex) {
             getLogger().log(Level.SEVERE, "Cannot connect to remote server!", ex);
             getProxy().stop();
+            return;
         }
+
+        Messenger.setInstance(new MessengerPlugin(client, getLogger()));
 
     }
 
     @Override
     public void onDisable() {
-        if (Objects.isNull(messengerClient)) {
+        final MessengerPlugin messenger = Messenger.getInstance();
+        if (Objects.isNull(messenger)) {
             return;
         }
 
         try {
-            messengerClient.disconnect();
+            messenger.disconnect();
         } catch (IOException ignored) {}
-    }
-
-    @Override
-    public void sendPacket(Packet packet) {
-        try {
-            messengerClient.sendPacket(packet);
-        } catch (IOException ex) {
-            getLogger().log(Level.SEVERE, "Cannot send packet \"" + packet.getClass().getSimpleName() + "\"!", ex);
-        }
-    }
-
-    @Override
-    public void sendPacket(Packet packet, Callback<?> callback) {
-        try {
-            messengerClient.sendPacket(packet, callback);
-        } catch (IOException ex) {
-            getLogger().log(Level.SEVERE, "Cannot send packet \"" + packet.getClass().getSimpleName() + "\"!", ex);
-        }
-    }
-
-    @Override
-    public void unsubscribePackets() {
-        messengerClient.unsubscribePackets();
-    }
-
-    @Override
-    public void subscribePackets(String... classNames) {
-        messengerClient.subscribePackets(classNames);
-    }
-
-    @Override
-    public void addPacketHandler(PacketHandler handler) {
-        messengerClient.addPacketHandler(handler);
-    }
-
-    @Override
-    public void removePacketHandler(Class<? extends PacketHandler> handlerClass) {
-        messengerClient.removePacketHandler(handlerClass);
     }
 
 }
