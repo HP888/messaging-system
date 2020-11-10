@@ -43,7 +43,7 @@ public final class PacketReaderThread extends Thread {
 
                 final int packetSize = packetStream.readInt();
                 if (!client.isPacketSubscribed(new String(className, StandardCharsets.UTF_8))) {
-                    inputStream.skipBytes(packetSize);
+                    packetStream.skipBytes(packetSize);
                     continue;
                 }
 

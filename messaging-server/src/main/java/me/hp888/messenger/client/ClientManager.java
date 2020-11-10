@@ -6,8 +6,6 @@ import me.hp888.messenger.MessengerServer;
 import me.hp888.messenger.thread.PacketReaderThread;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
