@@ -12,19 +12,22 @@ java -Dhost=0.0.0.0 -Dport=9999 -jar messaging-server-1.0-SNAPSHOT.jar
 or just run application:
 java -jar messaging-server-1.0-SNAPSHOT.jar
 
-# Using client as API
+# Using as API
 
 Add this code to your maven dependencies.
 
 ```xml
-
     <repositories>
         <repository>
             <id>safemc-repository</id>
             <url>https://safemc.pl/repository/releases</url>
         </repository>
     </repositories>
+```
 
+And if you want to create your own MessengerClient implementation:
+
+```xml
     <dependencies>
         <dependency>
             <groupId>me.hp888</groupId>
@@ -32,9 +35,19 @@ Add this code to your maven dependencies.
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
-
 ```
 
+or if you want to use our plugin for bukkit/velocity/bungee:
+
+```xml
+    <dependencies>
+        <dependency>
+            <groupId>me.hp888</groupId>
+            <artifactId>messenger-plugin</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+```
 
 **Example packet**
 
