@@ -14,7 +14,7 @@ java -jar messaging-server-1.0-SNAPSHOT.jar
 
 # Using as API
 
-Add this code to your maven dependencies.
+Add this code to your pom.xml file.
 
 ```xml
     <repositories>
