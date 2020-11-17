@@ -18,6 +18,7 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -25,6 +26,8 @@ import java.util.logging.Logger;
  */
 
 public final class MessengerClient implements Client {
+
+    private static final ExecutorService PACKET_SEND_EXECUTOR = Executors.newSingleThreadExecutor();
 
     private final PacketHandlerManager packetHandlers = new PacketHandlerManager();
     private final CallbackManager callbacks = new CallbackManager();
@@ -71,13 +74,7 @@ public final class MessengerClient implements Client {
         startedKeepAliveTask = true;
 
         final Packet heartbeatPacket = new HeartbeatPacket();
-        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
-            try {
-                sendPacket(heartbeatPacket);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }, 1L, 1L, TimeUnit.SECONDS);
+        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> sendPacket(heartbeatPacket), 1L, 1L, TimeUnit.SECONDS);
     }
 
     @Override
@@ -116,21 +113,48 @@ public final class MessengerClient implements Client {
     }
 
     @Override
-    public void sendPacket(Packet packet) throws IOException {
+    public void sendPacket(Packet packet) {
         if (!checkConnection()) {
             return;
         }
 
-        connection.sendPacket(packet, null);
+        PACKET_SEND_EXECUTOR.execute(() -> {
+            try {
+                connection.sendPacket(packet, null);
+            } catch (IOException ex) {
+                Logger.getLogger(MessengerClient.class.getSimpleName())
+                        .log(Level.SEVERE, "Cannot send packet " + packet.getClass().getSimpleName(), ex);
+
+                try {
+                    disconnect();
+                } catch (IOException ignored) {}
+            }
+        });
     }
 
     @Override
-    public void sendPacket(Packet packet, Callback callback) throws IOException {
+    public void sendPacket(Packet packet, Callback callback) {
+        if (Objects.isNull(callback)) {
+            sendPacket(packet);
+            return;
+        }
+
         if (!checkConnection()) {
             return;
         }
 
-        connection.sendPacket(packet, callbacks.addCallback(callback));
+        PACKET_SEND_EXECUTOR.execute(() -> {
+            try {
+                connection.sendPacket(packet, callbacks.addCallback(callback));
+            } catch (IOException ex) {
+                Logger.getLogger(MessengerClient.class.getSimpleName())
+                        .log(Level.SEVERE, "Cannot send packet " + packet.getClass().getSimpleName(), ex);
+
+                try {
+                    disconnect();
+                } catch (IOException ignored) {}
+            }
+        });
     }
 
     private boolean checkConnection() {
