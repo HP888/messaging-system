@@ -32,7 +32,7 @@ And if you want to create your own MessengerClient implementation:
         <dependency>
             <groupId>me.hp888</groupId>
             <artifactId>messaging-client</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 ```
@@ -44,7 +44,7 @@ or if you want to use our plugin for bukkit/velocity/bungee:
         <dependency>
             <groupId>me.hp888</groupId>
             <artifactId>messenger-plugin</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 ```
